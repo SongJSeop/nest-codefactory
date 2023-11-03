@@ -10,43 +10,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
-
-interface PostModel {
-  id: number;
-  author: string;
-  title: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-}
-
-let posts: PostModel[] = [
-  {
-    id: 1,
-    author: 'John',
-    title: 'My First Post',
-    content: 'Hello World!',
-    likeCount: 0,
-    commentCount: 0,
-  },
-  {
-    id: 2,
-    author: 'John',
-    title: 'My Second Post',
-    content: 'Hello World!',
-    likeCount: 0,
-    commentCount: 0,
-  },
-  {
-    id: 3,
-    author: 'John',
-    title: 'My Third Post',
-    content: 'Hello World!',
-    likeCount: 0,
-    commentCount: 0,
-  },
-];
+import { PostsService, PostModel } from './posts.service';
 
 @Controller('posts')
 export class PostsController {
@@ -54,18 +18,12 @@ export class PostsController {
 
   @Get()
   getPosts(): PostModel[] {
-    return posts;
+    return this.postsService.getAllPosts();
   }
 
   @Get('/:id')
   getPost(@Param('id', ParseIntPipe) id: number): PostModel {
-    const foundPost: PostModel = posts.find((post) => post.id === id);
-
-    if (!foundPost) {
-      throw new NotFoundException('Post not found!');
-    }
-
-    return foundPost;
+    return this.postsService.getPostById(id);
   }
 
   @Post()
@@ -74,16 +32,7 @@ export class PostsController {
     @Body('title') title: string,
     @Body('content') content: string,
   ): PostModel {
-    const post: PostModel = {
-      id: posts[posts.length - 1].id + 1,
-      author,
-      title,
-      content,
-      likeCount: 0,
-      commentCount: 0,
-    };
-    posts.push(post);
-    return post;
+    return this.postsService.createPost(author, title, content);
   }
 
   @Put('/:id')
@@ -93,17 +42,7 @@ export class PostsController {
     @Body('title') title?: string,
     @Body('content') content?: string,
   ): PostModel {
-    const foundPost: PostModel = posts.find((post) => post.id === id);
-
-    if (!foundPost) {
-      throw new NotFoundException('Post not found!');
-    }
-
-    foundPost.author = author;
-    foundPost.title = title;
-    foundPost.content = content;
-
-    return foundPost;
+    return this.postsService.putPost(id, author, title, content);
   }
 
   @Patch('/:id')
@@ -113,38 +52,11 @@ export class PostsController {
     @Body('title') title?: string,
     @Body('content') content?: string,
   ): PostModel {
-    const foundPost: PostModel = posts.find((post) => post.id === id);
-
-    if (!foundPost) {
-      throw new NotFoundException('Post not found!');
-    }
-
-    if (author) {
-      foundPost.author = author;
-    }
-
-    if (title) {
-      foundPost.title = title;
-    }
-
-    if (content) {
-      foundPost.content = content;
-    }
-
-    return foundPost;
+    return this.postsService.patchPost(id, author, title, content);
   }
 
   @Delete('/:id')
   deletePost(@Param('id', ParseIntPipe) id: number): PostModel {
-    const foundPostIndex: number = posts.findIndex((post) => post.id === id);
-
-    if (foundPostIndex === -1) {
-      throw new NotFoundException('Post not found!');
-    }
-
-    const foundPost: PostModel = posts[foundPostIndex];
-    posts = posts.filter((post) => post.id !== id);
-
-    return foundPost;
+    return this.postsService.deletePostById(id);
   }
 }
