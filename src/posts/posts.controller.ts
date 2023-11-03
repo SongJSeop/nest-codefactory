@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 
@@ -81,5 +84,67 @@ export class PostsController {
     };
     posts.push(post);
     return post;
+  }
+
+  @Put('/:id')
+  putPost(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('author') author?: string,
+    @Body('title') title?: string,
+    @Body('content') content?: string,
+  ): PostModel {
+    const foundPost: PostModel = posts.find((post) => post.id === id);
+
+    if (!foundPost) {
+      throw new NotFoundException('Post not found!');
+    }
+
+    foundPost.author = author;
+    foundPost.title = title;
+    foundPost.content = content;
+
+    return foundPost;
+  }
+
+  @Patch('/:id')
+  updatePost(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('author') author?: string,
+    @Body('title') title?: string,
+    @Body('content') content?: string,
+  ): PostModel {
+    const foundPost: PostModel = posts.find((post) => post.id === id);
+
+    if (!foundPost) {
+      throw new NotFoundException('Post not found!');
+    }
+
+    if (author) {
+      foundPost.author = author;
+    }
+
+    if (title) {
+      foundPost.title = title;
+    }
+
+    if (content) {
+      foundPost.content = content;
+    }
+
+    return foundPost;
+  }
+
+  @Delete('/:id')
+  deletePost(@Param('id', ParseIntPipe) id: number): PostModel {
+    const foundPostIndex: number = posts.findIndex((post) => post.id === id);
+
+    if (foundPostIndex === -1) {
+      throw new NotFoundException('Post not found!');
+    }
+
+    const foundPost: PostModel = posts[foundPostIndex];
+    posts = posts.filter((post) => post.id !== id);
+
+    return foundPost;
   }
 }
