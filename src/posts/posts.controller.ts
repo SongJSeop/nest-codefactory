@@ -1,4 +1,10 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
 
 interface PostModel {
@@ -48,6 +54,12 @@ export class PostsController {
 
   @Get('/:id')
   getPost(@Param('id', ParseIntPipe) id: number): PostModel {
-    return posts.find((post) => post.id === id);
+    const foundPost: PostModel = posts.find((post) => post.id === id);
+
+    if (!foundPost) {
+      throw new NotFoundException('Post not found!');
+    }
+
+    return foundPost;
   }
 }
