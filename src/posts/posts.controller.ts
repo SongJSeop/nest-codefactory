@@ -17,12 +17,12 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  getPosts(): PostModel[] {
+  getPosts(): Promise<PostModel[]> {
     return this.postsService.getAllPosts();
   }
 
   @Get('/:id')
-  getPost(@Param('id', ParseIntPipe) id: number): PostModel {
+  getPost(@Param('id', ParseIntPipe) id: number): Promise<PostModel> {
     return this.postsService.getPostById(id);
   }
 
@@ -31,18 +31,8 @@ export class PostsController {
     @Body('author') author: string,
     @Body('title') title: string,
     @Body('content') content: string,
-  ): PostModel {
+  ): Promise<PostModel> {
     return this.postsService.createPost(author, title, content);
-  }
-
-  @Put('/:id')
-  putPost(
-    @Param('id', ParseIntPipe) id: number,
-    @Body('author') author?: string,
-    @Body('title') title?: string,
-    @Body('content') content?: string,
-  ): PostModel {
-    return this.postsService.putPost(id, author, title, content);
   }
 
   @Patch('/:id')
@@ -51,12 +41,12 @@ export class PostsController {
     @Body('author') author?: string,
     @Body('title') title?: string,
     @Body('content') content?: string,
-  ): PostModel {
-    return this.postsService.patchPost(id, author, title, content);
+  ): Promise<PostModel> {
+    return this.postsService.updatePost(id, author, title, content);
   }
 
   @Delete('/:id')
-  deletePost(@Param('id', ParseIntPipe) id: number): PostModel {
+  deletePost(@Param('id', ParseIntPipe) id: number): Promise<number> {
     return this.postsService.deletePostById(id);
   }
 }
