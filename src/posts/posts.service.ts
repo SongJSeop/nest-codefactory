@@ -1,13 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
-export interface PostModel {
-  id: number;
-  author: string;
-  title: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-}
+import { PostModel } from './entities/posts.entity';
 
 let posts: PostModel[] = [
   {

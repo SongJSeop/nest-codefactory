@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configDotenv } from 'dotenv';
+import { PostModel } from './posts/entities/posts.entity';
 configDotenv();
 
 @Module({
@@ -16,7 +17,7 @@ configDotenv();
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [],
+      entities: [PostModel],
       synchronize: true,
     }),
   ],

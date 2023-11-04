@@ -3,14 +3,14 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Put,
 } from '@nestjs/common';
-import { PostsService, PostModel } from './posts.service';
+import { PostsService } from './posts.service';
+import { PostModel } from './entities/posts.entity';
 
 @Controller('posts')
 export class PostsController {
