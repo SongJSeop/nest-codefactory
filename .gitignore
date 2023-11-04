@@ -3,6 +3,8 @@
 /node_modules
 docker-compose.yaml
 postgres-data
+.env
+
 # Logs
 logs
 *.log
