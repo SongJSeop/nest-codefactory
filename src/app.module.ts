@@ -5,6 +5,7 @@ import { PostsModule } from './posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configDotenv } from 'dotenv';
 import { PostModel } from './posts/entities/posts.entity';
+import { UsersModule } from './users/users.module';
 configDotenv();
 
 @Module({
@@ -20,6 +21,7 @@ configDotenv();
       entities: [PostModel],
       synchronize: true,
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
